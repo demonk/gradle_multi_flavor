@@ -1,0 +1,57 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '23.0.2'
+    defaultConfig {
+        applicationId "cn.demonk.gradle"
+        minSdkVersion 19
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    flavorDimensions "lib"
+    productFlavors {
+        dev {
+            dimension "lib"
+        }
+        prod {
+            dimension "lib"
+        }
+    }
+
+    sourceSets {
+        prod{
+            java.srcDir 'src/prod'
+        }
+
+        dev{
+            java.srcDir 'src/dev'
+        }
+    }
+}
+
+configurations {
+    devDebugCompile
+    prodDebugCompile
+    devReleaseCompile
+    prodReleaseCompile
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:23.1.0'
+
+    devDebugCompile project(path: ':library', configuration: 'devDebug')
+    prodDebugCompile project(path: ':library', configuration: 'prodDebug')
+    devReleaseCompile project(path: ':library', configuration: 'devRelease')
+    prodReleaseCompile project(path: ':library', configuration: 'prodRelease')
+}
